@@ -1,9 +1,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State private var vm = OnboardingViewModel()
     @State private var showLogin = false
-    @State private var showSimulatorResult = false
 
     var body: some View {
         NavigationStack {
@@ -14,7 +12,6 @@ struct OnboardingView: View {
                     VStack(spacing: AppTheme.largeSpacing) {
                         heroSection
                         featuresSection
-                        simulatorSection
                         loginSection
                         legalSection
                     }
@@ -23,11 +20,6 @@ struct OnboardingView: View {
             }
             .navigationDestination(isPresented: $showLogin) {
                 LoginView()
-            }
-            .navigationDestination(isPresented: $showSimulatorResult) {
-                if let result = vm.simulatorResult {
-                    SimulatorResultView(result: result)
-                }
             }
         }
     }
@@ -44,7 +36,7 @@ struct OnboardingView: View {
                 .font(.system(size: 36, weight: .bold))
                 .foregroundStyle(.primary)
 
-            Text("Crédito inteligente para motoristas de Uber")
+            Text("Acompanhe suas parcelas e receba lembretes")
                 .font(.title3)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -53,9 +45,9 @@ struct OnboardingView: View {
 
     private var featuresSection: some View {
         VStack(spacing: AppTheme.spacing) {
-            featureRow(icon: "bolt.fill", title: "Rápido", description: "Aprovação em até 24 horas")
-            featureRow(icon: "lock.shield.fill", title: "Seguro", description: "Seus dados protegidos")
-            featureRow(icon: "percent", title: "Juros justos", description: "Taxas a partir de 3,5% ao mês")
+            featureRow(icon: "doc.text.fill", title: "Contratos", description: "Acompanhe seus contratos em tempo real")
+            featureRow(icon: "calendar", title: "Parcelas", description: "Veja o status de todas as suas parcelas")
+            featureRow(icon: "bell.fill", title: "Lembretes", description: "Receba notificações de vencimento")
         }
     }
 
@@ -79,28 +71,13 @@ struct OnboardingView: View {
         }
     }
 
-    private var simulatorSection: some View {
-        LoanSimulatorCard(
-            weeklyEarnings: $vm.weeklyEarnings,
-            isLoading: vm.isLoading,
-            isValid: vm.isValid
-        ) {
-            Task {
-                await vm.simulate()
-                if vm.simulatorResult != nil {
-                    showSimulatorResult = true
-                }
-            }
-        }
-    }
-
     private var loginSection: some View {
         VStack(spacing: AppTheme.spacing) {
             PrimaryButton(title: "Entrar com meu celular") {
                 showLogin = true
             }
 
-            Text("Já tem cadastro? Faça login para acessar sua conta.")
+            Text("Faça login para acessar seus contratos e parcelas.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

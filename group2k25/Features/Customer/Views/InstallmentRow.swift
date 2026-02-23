@@ -2,7 +2,6 @@ import SwiftUI
 
 struct InstallmentRow: View {
     let installment: Installment
-    var showPayButton: Bool = true
 
     private var statusColor: Color {
         switch installment.status {
@@ -43,23 +42,8 @@ struct InstallmentRow: View {
                     }
                 }
 
-                if showPayButton && (installment.status == .pendente || installment.status == .atrasado) {
-                    NavigationLink(value: CustomerDestination.pixPayment(installment.id)) {
-                        HStack {
-                            Image(systemName: "qrcode")
-                            Text("Pagar via PIX")
-                                .fontWeight(.semibold)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(AppTheme.primaryGradient)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: AppTheme.buttonCornerRadius))
-                    }
-                }
-
-                if installment.status == .pago, let paidAt = installment.paidAt {
-                    Text("Pago em \(paidAt)")
+                if installment.status == .pago, installment.paidAt != nil {
+                    Text("Pago em \(installment.paidAtFormatted)")
                         .font(.caption)
                         .foregroundStyle(.appSuccess)
                         .frame(maxWidth: .infinity, alignment: .trailing)

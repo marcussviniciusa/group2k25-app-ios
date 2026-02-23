@@ -51,39 +51,10 @@ nonisolated struct APIEndpoint: Sendable {
         APIEndpoint(path: "/auth/logout", method: .POST, requiresAuth: true)
     }
 
-    // MARK: - Simulator
+    // MARK: - Config
 
-    static func simulate(weeklyEarnings: Decimal) -> APIEndpoint {
-        let body = try? JSONSerialization.data(withJSONObject: ["weeklyEarnings": NSDecimalNumber(decimal: weeklyEarnings).doubleValue])
-        return APIEndpoint(path: "/simulator", method: .POST, body: body)
-    }
-
-    // MARK: - Lead
-
-    static var lead: APIEndpoint {
-        APIEndpoint(path: "/lead", requiresAuth: true)
-    }
-
-    static func uploadEarnings(fileBase64: String, fileName: String) -> APIEndpoint {
-        let body = try? JSONEncoder().encode(["file": fileBase64, "fileName": fileName])
-        return APIEndpoint(path: "/lead/earnings", method: .POST, requiresAuth: true, body: body)
-    }
-
-    static var proposal: APIEndpoint {
-        APIEndpoint(path: "/lead/proposal", requiresAuth: true)
-    }
-
-    static var acceptProposal: APIEndpoint {
-        APIEndpoint(path: "/lead/accept", method: .POST, requiresAuth: true)
-    }
-
-    static func uploadDocuments(cnh: String?, addressProof: String?, uberProfile: String?) -> APIEndpoint {
-        var dict: [String: String] = [:]
-        if let cnh { dict["cnh"] = cnh }
-        if let addressProof { dict["addressProof"] = addressProof }
-        if let uberProfile { dict["uberProfile"] = uberProfile }
-        let body = try? JSONEncoder().encode(dict)
-        return APIEndpoint(path: "/lead/documents", method: .POST, requiresAuth: true, body: body)
+    static var pixKey: APIEndpoint {
+        APIEndpoint(path: "/config/pix")
     }
 
     // MARK: - Contracts
@@ -104,10 +75,6 @@ nonisolated struct APIEndpoint: Sendable {
             items = [URLQueryItem(name: "status", value: status)]
         }
         return APIEndpoint(path: "/installments", requiresAuth: true, queryItems: items)
-    }
-
-    static func generatePix(installmentId: String) -> APIEndpoint {
-        APIEndpoint(path: "/installments/\(installmentId)/pix", method: .POST, requiresAuth: true)
     }
 
     // MARK: - Devices

@@ -1,11 +1,16 @@
 import Foundation
 import Observation
 
+nonisolated struct PixKeyResponse: Codable, Sendable {
+    let pixKey: String
+}
+
 @Observable
 @MainActor
 final class CustomerHomeViewModel {
     var contracts: [Contract] = []
     var pendingInstallments: [Installment] = []
+    var pixKey: String?
     var isLoading = false
     var errorMessage: String?
 
@@ -31,9 +36,11 @@ final class CustomerHomeViewModel {
         do {
             async let contractsResult: [Contract] = APIClient.shared.request(.contracts)
             async let installmentsResult: [Installment] = APIClient.shared.request(.installments())
+            async let pixResult: PixKeyResponse = APIClient.shared.request(.pixKey)
 
             contracts = try await contractsResult
             pendingInstallments = try await installmentsResult
+            pixKey = try? await pixResult.pixKey
         } catch let error as APIError {
             errorMessage = error.errorDescription
         } catch {

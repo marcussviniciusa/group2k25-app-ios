@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CustomerHomeView: View {
     @State private var vm = CustomerHomeViewModel()
+    @State private var pixCopied = false
     @Environment(AuthManager.self) private var authManager
 
     var body: some View {
@@ -38,6 +39,9 @@ struct CustomerHomeView: View {
         ScrollView {
             VStack(spacing: AppTheme.spacing) {
                 welcomeCard
+                if let pixKey = vm.pixKey {
+                    pixKeyCard(pixKey)
+                }
                 summaryCards
                 if let next = vm.nextInstallment {
                     nextInstallmentCard(next)
@@ -59,6 +63,50 @@ struct CustomerHomeView: View {
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func pixKeyCard(_ key: String) -> some View {
+        GlassCard {
+            VStack(spacing: AppTheme.smallSpacing) {
+                HStack {
+                    Image(systemName: "brazilianrealsign.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.appPrimary)
+                    Text("Chave PIX para pagamento")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.primary)
+                    Spacer()
+                }
+
+                Text(key)
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(AppTheme.smallSpacing)
+                    .background(Color.white.opacity(0.05))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                Button {
+                    UIPasteboard.general.string = key
+                    pixCopied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        pixCopied = false
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: pixCopied ? "checkmark" : "doc.on.doc")
+                        Text(pixCopied ? "Copiado!" : "Copiar chave")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(pixCopied ? Color.appSuccess : Color.appPrimary)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.buttonCornerRadius))
+                }
+                .animation(.easeInOut(duration: 0.2), value: pixCopied)
+            }
         }
     }
 

@@ -18,10 +18,6 @@ final class AuthManager {
         return false
     }
 
-    var userType: UserType? {
-        currentUser?.type
-    }
-
     private let client = APIClient.shared
 
     init() {

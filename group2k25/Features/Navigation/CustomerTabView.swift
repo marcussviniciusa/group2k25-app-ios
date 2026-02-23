@@ -40,8 +40,6 @@ struct CustomerTabView: View {
             ContractDetailView(contractId: id)
         case .installments:
             InstallmentListView()
-        case .pixPayment(let installmentId):
-            PixPaymentView(installmentId: installmentId)
         case .terms:
             TermsView()
         case .privacy:

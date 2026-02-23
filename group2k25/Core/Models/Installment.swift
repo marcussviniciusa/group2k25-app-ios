@@ -28,14 +28,20 @@ nonisolated struct Installment: Codable, Sendable, Identifiable {
     let status: InstallmentStatus
     let paidAmount: Decimal?
     let paidAt: String?
-    let pixCopiaECola: String?
-    let pixExpiresAt: String?
 
     var dueDateFormatted: String {
         guard let dueDate else { return "-" }
         let iso = ISO8601DateFormatter()
         iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         guard let date = iso.date(from: dueDate) else { return dueDate }
+        return date.asBrazilianDate
+    }
+
+    var paidAtFormatted: String {
+        guard let paidAt else { return "-" }
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let date = iso.date(from: paidAt) else { return paidAt }
         return date.asBrazilianDate
     }
 }

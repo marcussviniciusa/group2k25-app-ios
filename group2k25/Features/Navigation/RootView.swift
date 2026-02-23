@@ -10,13 +10,8 @@ struct RootView: View {
                 LoadingView(message: "Verificando sessão...")
             case .unauthenticated:
                 OnboardingView()
-            case .authenticated(let user):
-                switch user.type {
-                case .lead:
-                    LeadTabView()
-                case .customer:
-                    CustomerTabView()
-                }
+            case .authenticated:
+                CustomerTabView()
             }
         }
         .environment(authManager)
