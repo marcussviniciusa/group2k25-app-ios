@@ -32,7 +32,25 @@ final class ContractDetailViewModel {
         errorMessage = nil
 
         do {
-            contract = try await APIClient.shared.request(.contractDetail(id: contractId))
+            let response: ContractDetailResponse = try await APIClient.shared.request(.contractDetail(id: contractId))
+            var detail = response.contract
+            detail = Contract(
+                id: detail.id,
+                number: detail.number,
+                principalAmount: detail.principalAmount,
+                totalAmount: detail.totalAmount,
+                interestRate: detail.interestRate,
+                installmentsCount: detail.installmentsCount,
+                installmentAmount: detail.installmentAmount,
+                status: detail.status,
+                paidCount: detail.paidCount,
+                overdueCount: detail.overdueCount,
+                remainingAmount: detail.remainingAmount,
+                nextDueDate: detail.nextDueDate,
+                createdAt: detail.createdAt,
+                installments: response.installments
+            )
+            contract = detail
         } catch let error as APIError {
             errorMessage = error.errorDescription
         } catch {

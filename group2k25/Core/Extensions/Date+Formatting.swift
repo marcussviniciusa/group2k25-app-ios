@@ -1,7 +1,7 @@
 import Foundation
 
 extension Date {
-    var asBrazilianDate: String {
+    nonisolated var asBrazilianDate: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         formatter.locale = Locale(identifier: "pt_BR")
@@ -9,7 +9,7 @@ extension Date {
         return formatter.string(from: self)
     }
 
-    var asBrazilianDateTime: String {
+    nonisolated var asBrazilianDateTime: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy HH:mm"
         formatter.locale = Locale(identifier: "pt_BR")
@@ -17,7 +17,7 @@ extension Date {
         return formatter.string(from: self)
     }
 
-    var timeRemaining: String {
+    nonisolated var timeRemaining: String {
         let interval = self.timeIntervalSinceNow
         guard interval > 0 else { return "Expirado" }
 

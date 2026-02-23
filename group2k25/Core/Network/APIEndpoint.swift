@@ -109,4 +109,16 @@ nonisolated struct APIEndpoint: Sendable {
     static func generatePix(installmentId: String) -> APIEndpoint {
         APIEndpoint(path: "/installments/\(installmentId)/pix", method: .POST, requiresAuth: true)
     }
+
+    // MARK: - Devices
+
+    static func registerDevice(token: String) -> APIEndpoint {
+        let body = try? JSONEncoder().encode(["token": token, "platform": "ios"])
+        return APIEndpoint(path: "/devices", method: .POST, requiresAuth: true, body: body)
+    }
+
+    static func unregisterDevice(token: String) -> APIEndpoint {
+        let body = try? JSONEncoder().encode(["token": token])
+        return APIEndpoint(path: "/devices", method: .DELETE, requiresAuth: true, body: body)
+    }
 }

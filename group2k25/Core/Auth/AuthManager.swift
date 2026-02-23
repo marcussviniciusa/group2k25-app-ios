@@ -46,6 +46,7 @@ final class AuthManager {
             let response: MeResponse = try await client.request(.me)
             currentUser = response.user
             state = .authenticated(response.user)
+            AppDelegate.sendPendingDeviceToken()
         } catch {
             KeychainHelper.shared.delete(key: "auth_token")
             currentUser = nil
@@ -57,9 +58,14 @@ final class AuthManager {
         KeychainHelper.shared.save(key: "auth_token", value: token)
         currentUser = user
         state = .authenticated(user)
+        AppDelegate.sendPendingDeviceToken()
     }
 
     func logout() async {
+        if let deviceToken = UserDefaults.standard.string(forKey: "deviceToken") {
+            try? await client.requestVoid(.unregisterDevice(token: deviceToken))
+            UserDefaults.standard.removeObject(forKey: "deviceToken")
+        }
         try? await client.requestVoid(.logout)
         KeychainHelper.shared.delete(key: "auth_token")
         currentUser = nil

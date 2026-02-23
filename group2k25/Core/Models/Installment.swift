@@ -32,6 +32,10 @@ nonisolated struct Installment: Codable, Sendable, Identifiable {
     let pixExpiresAt: String?
 
     var dueDateFormatted: String {
-        dueDate ?? "-"
+        guard let dueDate else { return "-" }
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let date = iso.date(from: dueDate) else { return dueDate }
+        return date.asBrazilianDate
     }
 }

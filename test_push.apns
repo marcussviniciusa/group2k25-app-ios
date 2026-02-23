@@ -1,0 +1,15 @@
+{
+  "Simulator Target Bundle": "quantiumcode.group2k25",
+  "aps": {
+    "alert": {
+      "title": "Parcela vence hoje",
+      "body": "Sua parcela #3 do contrato 1234 no valor de R$ 450,00 vence hoje."
+    },
+    "sound": "default",
+    "badge": 1
+  },
+  "data": {
+    "type": "installment_due_today",
+    "contract_id": "abc-123"
+  }
+}

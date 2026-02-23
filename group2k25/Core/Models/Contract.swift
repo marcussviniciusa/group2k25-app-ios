@@ -36,4 +36,25 @@ nonisolated struct Contract: Codable, Sendable, Identifiable {
 
     var loanAmount: Decimal { principalAmount }
     var numberOfInstallments: Int { installmentsCount }
+
+    var createdAtFormatted: String {
+        guard let createdAt else { return "-" }
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let date = iso.date(from: createdAt) else { return createdAt }
+        return date.asBrazilianDate
+    }
+
+    var nextDueDateFormatted: String {
+        guard let nextDueDate else { return "-" }
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let date = iso.date(from: nextDueDate) else { return nextDueDate }
+        return date.asBrazilianDate
+    }
+}
+
+nonisolated struct ContractDetailResponse: Codable, Sendable {
+    let contract: Contract
+    let installments: [Installment]
 }

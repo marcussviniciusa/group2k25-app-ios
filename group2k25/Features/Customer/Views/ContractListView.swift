@@ -62,9 +62,9 @@ struct ContractListView: View {
                     infoItem(label: "Juros", value: "\(contract.interestRate)% a.m.")
                 }
 
-                if let date = contract.createdAt {
+                if contract.createdAt != nil {
                     HStack {
-                        Text("Criado em: \(date)")
+                        Text("Criado em: \(contract.createdAtFormatted)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Spacer()
