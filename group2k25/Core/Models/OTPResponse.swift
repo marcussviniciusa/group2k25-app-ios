@@ -11,3 +11,7 @@ nonisolated struct OTPVerifyResponse: Codable, Sendable {
     let token: String
     let user: User
 }
+
+nonisolated struct HasPasswordResponse: Codable, Sendable {
+    let hasPassword: Bool
+}

@@ -43,12 +43,21 @@ nonisolated struct APIEndpoint: Sendable {
         return APIEndpoint(path: "/auth/verify-otp", method: .POST, body: body)
     }
 
+    static func loginWithPassword(phone: String, password: String) -> APIEndpoint {
+        let body = try? JSONEncoder().encode(["phone": phone, "password": password])
+        return APIEndpoint(path: "/auth/login", method: .POST, body: body)
+    }
+
     static var me: APIEndpoint {
         APIEndpoint(path: "/auth/me", requiresAuth: true)
     }
 
     static var logout: APIEndpoint {
         APIEndpoint(path: "/auth/logout", method: .POST, requiresAuth: true)
+    }
+
+    static var deleteAccount: APIEndpoint {
+        APIEndpoint(path: "/auth/delete-account", method: .DELETE, requiresAuth: true)
     }
 
     // MARK: - Config

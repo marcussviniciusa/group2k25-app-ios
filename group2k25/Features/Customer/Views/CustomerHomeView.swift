@@ -3,6 +3,7 @@ import SwiftUI
 struct CustomerHomeView: View {
     @State private var vm = CustomerHomeViewModel()
     @State private var pixCopied = false
+    @State private var showDeleteConfirmation = false
     @Environment(AuthManager.self) private var authManager
 
     var body: some View {
@@ -47,8 +48,34 @@ struct CustomerHomeView: View {
                     nextInstallmentCard(next)
                 }
                 contractsPreview
+
+                Button(role: .destructive) {
+                    showDeleteConfirmation = true
+                } label: {
+                    HStack {
+                        Image(systemName: "trash")
+                        Text("Excluir minha conta")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.red)
+                .padding(.top, AppTheme.spacing)
             }
             .padding(AppTheme.spacing)
+        }
+        .confirmationDialog(
+            "Excluir conta",
+            isPresented: $showDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Excluir minha conta", role: .destructive) {
+                Task { await authManager.deleteAccount() }
+            }
+            Button("Cancelar", role: .cancel) {}
+        } message: {
+            Text("Tem certeza que deseja excluir sua conta? Suas sessões e dados de acesso serão removidos.")
         }
     }
 

@@ -68,6 +68,17 @@ final class AuthManager {
         state = .unauthenticated
     }
 
+    func deleteAccount() async {
+        if let deviceToken = UserDefaults.standard.string(forKey: "deviceToken") {
+            try? await client.requestVoid(.unregisterDevice(token: deviceToken))
+            UserDefaults.standard.removeObject(forKey: "deviceToken")
+        }
+        try? await client.requestVoid(.deleteAccount)
+        KeychainHelper.shared.delete(key: "auth_token")
+        currentUser = nil
+        state = .unauthenticated
+    }
+
     func refreshUser() async {
         do {
             let response: MeResponse = try await client.request(.me)
